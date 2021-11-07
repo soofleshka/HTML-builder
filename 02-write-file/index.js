@@ -1,28 +1,30 @@
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
+const inputFilePath = path.join(__dirname, 'user-input.txt');
+
+console.log('Enter text:');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-fs.appendFile(__dirname + '/user-input.txt', '', (err) => {
+fs.appendFile(inputFilePath, '', (err) => {
   if (err) throw err;
 });
 
-console.log('Enter text:');
-
 rl.on('line', function (line) {
-  if (line === 'exit') rl.close();
+  if (line.trim() === 'exit') rl.close();
   else
-    fs.appendFile(__dirname + '/user-input.txt', line + '\n', (err) => {
+    fs.appendFile(inputFilePath, line + '\n', (err) => {
       if (err) throw err;
     });
 });
 
 rl.on('SIGINT', () => {
   if (rl.line)
-    fs.appendFile(__dirname + '/user-input.txt', rl.line + '\n', (err) => {
+    fs.appendFile(inputFilePath, rl.line + '\n', (err) => {
       if (err) throw err;
     });
   rl.close();
