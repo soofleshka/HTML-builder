@@ -1,21 +1,16 @@
 const fs = require('fs');
 const readline = require('readline');
-const chalk = require('chalk');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-rl._writeToOutput = function _writeToOutput(stringToWrite) {
-  rl.output.write(chalk.black.bgRedBright(stringToWrite));
-};
-
 fs.appendFile(__dirname + '/user-input.txt', '', (err) => {
   if (err) throw err;
 });
 
-console.log(chalk.bgWhiteBright.bold('Enter text:'));
+console.log('Enter text:');
 
 rl.on('line', function (line) {
   if (line === 'exit') rl.close();
@@ -35,5 +30,5 @@ rl.on('SIGINT', () => {
 });
 
 process.on('beforeExit', () => {
-  console.log(chalk.bgWhiteBright.bold('Good bye!'));
+  console.log('Good bye!');
 });

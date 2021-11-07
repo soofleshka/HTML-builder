@@ -14,7 +14,7 @@ function errCallback(err) {
   if (err) throw err;
 }
 
-const mergeStyles = async () => {
+const mergeStyles = async (stylesDirPath, stylesBundleFilePath) => {
   const styleDataArr = [];
   let styleFiles = await fsPromises.readdir(stylesDirPath, {
     withFileTypes: true,
@@ -30,14 +30,16 @@ const mergeStyles = async () => {
     const styleData = await fsPromises.readFile(styleFilePath, 'utf-8');
     styleDataArr.push(styleData);
   }
-  bundleStyleFile(styleDataArr);
+  bundleStyleFile(stylesBundleFilePath, styleDataArr);
 };
 
-async function bundleStyleFile(styleDataArr) {
-  await fsPromises.unlink(stylesBundleFilePath);
+async function bundleStyleFile(stylesBundleFilePath, styleDataArr) {
+  await fsPromises.rm(stylesBundleFilePath, { force: true });
   for (let styleData of styleDataArr) {
     fs.appendFile(stylesBundleFilePath, styleData, 'utf-8', errCallback);
   }
 }
 
-mergeStyles().catch((e) => console.log(e));
+mergeStyles(stylesDirPath, stylesBundleFilePath).catch((e) => console.log(e));
+
+module.exports = { mergeStyles };
