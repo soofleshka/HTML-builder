@@ -63,7 +63,7 @@ const mergeStyles = async (stylesDirPath, stylesBundleFilePath) => {
 async function bundleStyleFile(stylesBundleFilePath, styleDataArr) {
   await fsPromises.rm(stylesBundleFilePath, { force: true });
   for (let styleData of styleDataArr) {
-    fs.appendFile(stylesBundleFilePath, styleData, 'utf-8', errCallback);
+    fs.appendFile(stylesBundleFilePath, styleData + '\n', 'utf-8', errCallback);
   }
 }
 
