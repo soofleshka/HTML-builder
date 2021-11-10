@@ -89,8 +89,21 @@ const createIndexHTML = async () => {
   for (const tag of templateTags) {
     const componentName = tag.replace(/\W/g, '') + '.html';
     const componentHtmlPath = path.join(htmlComponentsDirPath, componentName);
-    const componentHtml = await fsPromises.readFile(componentHtmlPath, 'utf-8');
-    htmlString = htmlString.replace(tag, componentHtml);
+    try {
+      const componentHtml = await fsPromises.readFile(
+        componentHtmlPath,
+        'utf-8'
+      );
+      htmlString = htmlString.replace(tag, componentHtml);
+    } catch (e) {
+      if (e.code === 'ENOENT') {
+        const templateFullName = path.basename(e.path);
+        const templateName = path.basename(e.path, '.html');
+        console.log(
+          `\tThere is no ${templateFullName} component for template {{${templateName}}}`
+        );
+      } else console.log(e);
+    }
   }
 
   fs.appendFile(htmlPath, htmlString, 'utf-8', errCallback);
